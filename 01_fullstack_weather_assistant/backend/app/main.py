@@ -6,7 +6,7 @@ from agents import Agent, Runner, function_tool
 from dotenv import load_dotenv
 from pydantic import BaseModel
 from setupconfig import config
-from fastapi import FastAPI,Request
+from fastapi import FastAPI
 from sse_starlette.sse import EventSourceResponse
 
 app = FastAPI()
