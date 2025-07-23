@@ -26,7 +26,8 @@ export async function POST(req: NextRequest) {
           const chunk = decoder.decode(value, { stream: true });
 
           // Directly enqueue the chunk — no need to filter "data:" lines
-          controller.enqueue(chunk);
+          const cleaned = chunk.replace(/^data:\s*/gm, '');
+          controller.enqueue(cleaned);
         }
         controller.close();
       } catch (err) {

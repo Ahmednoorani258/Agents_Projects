@@ -9,6 +9,7 @@ from setupconfig import config
 from fastapi import FastAPI
 from sse_starlette.sse import EventSourceResponse
 
+
 app = FastAPI()
 
 class ChatRequest(BaseModel):
@@ -17,7 +18,7 @@ class ChatRequest(BaseModel):
 load_dotenv()
 
 @app.get("/")
-def read_root():
+def hello_world():
     return {"Hello": "World"}
  
 @dataclass
@@ -134,6 +135,7 @@ async def stream_weather(req: ChatRequest):
         async for event in result.stream_events():
             if event.type == "raw_response_event" and hasattr(event.data, 'delta'):
                yield event.data.delta
+               
 
     return EventSourceResponse(
         event_generator(),
