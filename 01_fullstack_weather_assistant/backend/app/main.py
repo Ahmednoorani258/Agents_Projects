@@ -87,11 +87,11 @@ weather_assistant = Agent(
    tools=[get_weather]
 )
 
-async def main(msg: str):
-   runner = Runner()
+# async def main(msg: str):
+#    runner = Runner()
   
-   simple_request = await runner.run(weather_assistant, msg, run_config=config)
-   return simple_request.final_output
+#    simple_request = await runner.run(weather_assistant, msg, run_config=config)
+#    return simple_request.final_output
 
 # if __name__ == "__main__":
 #    import asyncio
@@ -106,9 +106,9 @@ async def main(msg: str):
 #       if event.type == "raw_response_event" and hasattr(event.data, 'delta'):
 #             token = event.data.delta
 #             await msg.stream_token(token)
-@app.post("/weather")
-async def weather_endpoint(req: ChatRequest):
-   return {"response": await main(req.message)}
+# @app.post("/weather")
+# async def weather_endpoint(req: ChatRequest):
+#    return {"response": await main(req.message)}
 
 # @app.post("/weather-stream")
 # async def stream_weather(req: Request):
@@ -146,3 +146,8 @@ async def stream_weather(req: ChatRequest):
             "X-Accel-Buffering": "no"
         }
     )
+    
+    
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=8000)
