@@ -1,9 +1,13 @@
 from setupconfig import config
 from agents import Agent, Runner
 
+def demofunction():
+    return "demo function"
+
 demoagent = Agent(
-    "Teacher_agent_sdk",
-    instructions= "u r sdk teacher"
+    name="Teacher_agent_sdk",
+    instructions= "u r sdk teacher",
+    tools=[demofunction]
 )
 
 user_input = ""

@@ -1,17 +1,43 @@
 from agents import Agent
+from tools import web_search
 
-scheduler_agent = Agent(
-    name="StudyPlanSchedulerAgent",
-    instructions="You are a Study Plan Scheduler. Your task is to collect user input, including study topics, deadlines, and available study hours per day. Based on this information, create a personalized and efficient study plan that evenly distributes the workload, prioritizes upcoming deadlines, and includes short breaks. Present the plan in a clear, daily format."
+summarizer_agent = Agent(
+    name="KnowledgeSummarizerAgent",
+    instructions=(
+        "You are a Summarization Agent. Your task is to read through the research content "
+        "(text, links, or excerpts) handed off to you and extract the most important information. "
+        "Condense the content into clear, easy-to-read bullet points or short paragraphs. "
+        "Focus on simplifying complex ideas, ensuring clarity and relevance to the original study topics. "
+        "Return a concise summary that makes the content easier to understand and review."
+    ),
 )
 
 research_agent = Agent(
     name="TopicResearchAgent",
-    instructions="You are a Research Assistant Agent. Your task is to search the web for credible, high-quality sources such as academic articles, educational videos, blogs, or official documentation related to the study topics provided. Return a list of resources for each topic, including titles, short descriptions, and direct URLs. Ensure all content is relevant, up-to-date, and easy to understand.",
+    instructions=(
+        "You are a Research Assistant Agent. When a user provides study topics, use the `web_search` tool "
+        "to find credible, high-quality resources (e.g., academic articles, videos, blogs, documentation). "
+        "Return a list of resources for each topic, including titles, short descriptions, and direct URLs. "
+        "Once research is gathered, automatically hand off the content to the KnowledgeSummarizerAgent "
+        "for summarization."
+    ),
+    tools=[web_search],
+    tool_use_behavior="stop_on_first_tool",
+    handoffs=[summarizer_agent]
 )
 
-summarizer_agent = Agent(
-    name="KnowledgeSummarizerAgent",
-    instructions="You are a Summarization Agent. Your task is to read through provided research content (text, links, or excerpts) and extract the most important information. Condense the content into concise, easy-to-read bullet points or brief paragraphs. Focus on clarity, relevance to the original study topic, and simplifying complex concepts for easier learning."
-    
+scheduler_agent = Agent(
+    name="StudyPlanSchedulerAgent",
+    instructions=(
+        "You are a Study Plan Scheduler Agent. Do not ask any questions or request input from the user. "
+        "Assume that study topics, deadlines, and available study hours per day are already available in the current context. "
+        "Use this information to create a personalized and efficient study plan that:\n"
+        "- Evenly distributes study time\n"
+        "- Prioritizes topics with earlier deadlines\n"
+        "- Includes short breaks\n\n"
+        "After creating the study plan, automatically hand off the study topics to the TopicResearchAgent "
+        "to gather additional learning resources. If needed, you can use the Research Agent to look up any information "
+        "you don't already have."
+    ),
+    handoffs=[research_agent]
 )
