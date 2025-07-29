@@ -1,5 +1,6 @@
 from agents import Agent
 from tools import web_search
+from guardrail import academic_filter_guardrail,summary_length_guardrail,SummaryOutput,ResearchOutput
 
 summarizer_agent = Agent(
     name="KnowledgeSummarizerAgent",
@@ -10,6 +11,8 @@ summarizer_agent = Agent(
         "Focus on simplifying complex ideas, ensuring clarity and relevance to the original study topics. "
         "Return a concise summary that makes the content easier to understand and review."
     ),
+    output_type=SummaryOutput,
+    output_guardrails=[summary_length_guardrail],
 )
 
 research_agent = Agent(
@@ -23,7 +26,9 @@ research_agent = Agent(
     ),
     tools=[web_search],
     tool_use_behavior="stop_on_first_tool",
-    handoffs=[summarizer_agent]
+    handoffs=[summarizer_agent],
+    output_type=ResearchOutput,
+    output_guardrails=[academic_filter_guardrail]
 )
 
 scheduler_agent = Agent(
@@ -39,5 +44,7 @@ scheduler_agent = Agent(
         "to gather additional learning resources. If needed, you can use the Research Agent to look up any information "
         "you don't already have."
     ),
-    handoffs=[research_agent]
+    handoffs=[research_agent],
+    
+    
 )
